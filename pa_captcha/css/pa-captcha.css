@@ -1,0 +1,35 @@
+.pa-captcha-field-row{
+    margin-bottom: 7px;
+}
+#pa-captcha-refesh img{
+    width: 20px;
+    height: 20px;
+}
+#pa-captcha-refesh{
+    display: inline-block;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.ps_v_15 .pa-captcha-field-cell{
+    display: inline-block;
+    width: 270px;
+}
+.ps_v_15 .pa-captcha-img {
+  float: left;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.ps_v_15 .pa-captcha-img-data{
+    float: left;
+    
+}
+.ps_v_15 #pa-captcha-refesh{
+    float: left;
+    margin-top: 4px;
+}
+.page_registration.ps_v_15{
+    background: none repeat scroll 0 0 #F8F8F8;
+    border: 1px solid #CCCCCC;
+    padding: 15px 0!important;
+    margin-bottom: 20px!important;
+}

@@ -1,0 +1,100 @@
+{if isset($is_logged) && $is_logged}
+{capture name=path}{l s='Contact'}{/capture}
+<h1 class="page-heading bottom-indent">
+	{l s='Customer service'} - {if isset($customerThread) && $customerThread}{l s='Your reply'}{else}{l s='Contact us'}{/if}
+</h1>
+{if isset($confirmation)}
+	<p class="alert alert-success">{l s='Your message has been successfully sent to our team.'}</p>
+	<ul class="footer_links clearfix">
+		<li>
+			<a class="btn btn-default button button-small" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}">
+				<span>
+					<i class="icon-chevron-left"></i>{l s='Home'}
+				</span>
+			</a>
+		</li>
+	</ul>
+{elseif isset($alreadySent)}
+	<p class="alert alert-warning">{l s='Your message has already been sent.'}</p>
+	<ul class="footer_links clearfix">
+		<li>
+			<a class="btn btn-default button button-small" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}">
+				<span>
+					<i class="icon-chevron-left"></i>{l s='Home'}
+				</span>
+			</a>
+		</li>
+	</ul>
+{else}
+	{include file="$tpl_dir./errors.tpl"}
+	<form action="{$request_uri}" method="post" class="contact-form-box" enctype="multipart/form-data">
+		<fieldset>
+			<h3 class="page-subheading">{l s='send a message'}</h3>
+			<div class="clearfix">
+				<div class="col-xs-12 col-md-3">
+					<div class="form-group">
+						<label>Subject Heading</label>
+						<select id="id_complaints_category" class="form-control" name="id_complaints_category">
+							<option value="0" selected>-- Choose --</option>
+							{foreach from=$contacts item=contact}
+								<option value="{$contact.id_reason|intval}"{if isset($smarty.request.id_reason) && $smarty.request.id_contact == $contact.id_reason} selected="selected"{/if}>{$contact.reason|escape:'html':'UTF-8'}</option>
+							{/foreach}
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Sub Heading</label>
+						<select id="id_sub_complaints_category" class="form-control" name="id_sub_complaints_category">
+							<option value="0" selected>-- Choose --</option>
+							{foreach from=$sub_contacts item=contact}
+								<option value="{$contact.id_parent|intval}">{$contact.reason|escape:'html':'UTF-8'}</option>
+							{/foreach}
+						</select>
+					</div>
+					<p class="form-group">
+						<label for="email">{l s='Mobile'}</label>
+						{if isset($customerThread.email)}
+							<input class="form-control grey" type="text" id="email" name="from" value="{$customerThread.email|escape:'html':'UTF-8'}" readonly="readonly" />
+						{else}
+							<input class="form-control grey validate" type="text" id="email" name="from" data-validate="isEmail" value="{$email|escape:'html':'UTF-8'}" />
+						{/if}
+					</p>
+					{hook h='displayPaCaptcha'}
+				</div>
+				<div class="col-xs-12 col-md-9">
+					<div class="form-group">
+						<label for="message">{l s='Message'}</label>
+						<textarea class="form-control" id="message" name="message">{if isset($message)}{$message|escape:'html':'UTF-8'|stripslashes}{/if}</textarea>
+					</div>
+				</div>
+			</div>
+			<div class="submit">
+				<button type="submit" name="submitMessage" id="submitMessage" class="button btn btn-default button-medium"><span>{l s='Send'}<i class="icon-chevron-right right"></i></span></button>
+			</div>
+		</fieldset>
+	</form>
+{/if}
+{addJsDefL name='contact_fileDefaultHtml'}{l s='No file selected' js=1}{/addJsDefL}
+{addJsDefL name='contact_fileButtonHtml'}{l s='Choose File' js=1}{/addJsDefL}
+{else}
+<a>Please </a><a href="http://103.233.76.242/shop/index.php?controller=authentication&back=my-account" style="font-family:tahoma;font-size:20px;color:rgb(0, 0, 255);">Register</a> <a>or</a> <a href="http://103.233.76.242/shop/index.php?controller=authentication&back=my-account" style="font-family:tahoma;font-size:20px;color:rgb(0, 0, 255);">Login</a> <a>To Contact Us</a>
+{/if}
+<script>
+	window.onload = function () {
+		document.getElementById('id_sub_complaints_category').disabled=true
+		document.getElementById('submitMessage').disabled=true;
+	}
+	$("#id_complaints_category").change(function() {
+		document.getElementById('id_sub_complaints_category').disabled=false;
+		document.getElementById('submitMessage').disabled=true;
+		$("#id_sub_complaints_category").val("0");
+		if($(this).data('options') == undefined){
+			$(this).data('options',$('#id_sub_complaints_category option').clone());
+		} 
+		var id = $(this).val();
+		var options = $(this).data('options').filter('[value=' + id + ']');
+		$('#id_sub_complaints_category').html(options);
+	});
+	$("#id_sub_complaints_category").change(function() {
+			document.getElementById('submitMessage').disabled=false;
+	});
+</script>
